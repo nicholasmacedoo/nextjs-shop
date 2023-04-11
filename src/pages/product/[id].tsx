@@ -4,8 +4,10 @@ import Stripe from "stripe";
 import { stripe } from "../../lib/stripe";
 import { useCart } from "../../contexts/Cart";
 
-import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
+import {  ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
 import { priceFormatter } from "../../utils/formatter";
+// import { Canvas } from "@react-three/fiber";
+// import { useGLTF } from "@react-three/drei";
 
 interface ProductProps {
     product: {
@@ -23,6 +25,8 @@ interface ProductProps {
 export default function Product({ product }: ProductProps) {
     
     const { addProduct } = useCart()
+    
+    // const { scene, materials } = useGLTF("/shirt_baked.glb")
 
     async function handleBuyProduct() {
         addProduct(product)
@@ -30,6 +34,17 @@ export default function Product({ product }: ProductProps) {
 
     return (
         <ProductContainer>
+            {/* <Image3dContainer> */}
+                {/* <Canvas style={{
+                     width: "100%",
+                     height: 656,
+                }}> */}
+                    {/* <group> */}
+                        {/* <primitive object={scene} /> */}
+                        {/* <mesh geometry={nodes} /> */}
+                    {/* </group> */}
+                {/* </Canvas> */}
+            {/* </Image3dContainer> */}
             <ImageContainer>
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
             </ImageContainer>
