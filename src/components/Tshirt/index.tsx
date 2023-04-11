@@ -1,41 +1,51 @@
-import { Decal, Environment, PresentationControls, useGLTF } from "@react-three/drei";
-import { Canvas, GroupProps } from "@react-three/fiber";
+import { useRef } from "react";
+import { Group, TextureLoader } from "three";
+import { Decal, Environment, OrbitControls, useGLTF } from "@react-three/drei";
+import { GroupProps, useFrame, useLoader } from "@react-three/fiber";
 
-export function Tshirt(props: GroupProps) {
+
+interface TShirtProps extends GroupProps {
+    decalImage: string
+}
+export function Tshirt({ decalImage, ...rest }: TShirtProps) {
+    const meshRef = useRef<Group>()
     // @ts-ignore
     const { nodes, materials } = useGLTF("/shirt_baked.glb");
-    // const texture = useTexture("/react.png")
+
+    const texture = useLoader(TextureLoader, decalImage)
+
+    useFrame(() => (meshRef.current.rotation.y += 0.005))
 
     return (
-        <Canvas
-            style={{
-                width: "100%",
-                height: 656,
-            }}>
-            <PresentationControls azimuth={[-Infinity, Infinity]}>
-                <group {...props} dispose={null}>
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.T_Shirt_male.geometry}
-                        material={materials.lambert1}
-                        dispose={null}
-                    >
-                        <Decal
-                            debug
-                            position={[0, 0, 0]}
-                            rotation={[0, 0, 0]}
-                            scale={1}
-                        // map={texture}
-                        />
+        <>
+            <group ref={meshRef} {...rest} dispose={null}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.T_Shirt_male.geometry}
+                    material={materials.lambert1}
+                    dispose={null}
+                >
+                    <Decal
+                        // debug
+                        position={[0, 0, 0.2]}
+                        rotation={[0, 0, 0]}
+                        scale={0.25}
+                        map={texture}
+                    />
 
-                    </mesh>
-                </group>
-            </PresentationControls>
-            <Environment preset="studio" />
-        </Canvas>
+                </mesh>
+            </group>
+
+            <OrbitControls autoRotate minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} />
+
+            {/* <SpotLight color="#0c8cbf" position={[3, 3, 2]}/> */}
+            <ambientLight intensity={0.4} />
+            <Environment preset="city" />
+        </>
+
     )
 
 }
 
-useGLTF.preload("/shirt_baked.glb");
+// useGLTF.preload("/shirt_baked.glb");
